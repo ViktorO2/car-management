@@ -9,6 +9,10 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 public interface GarageService {
-    List<GarageDTO> getAllGarages();
 
-}
+    List<GarageDTO> getAllGarages(String city);
+    GarageDTO getGarageById(Long id);
+    GarageDTO createGarage(GarageDTO garageDTO);
+    GarageDTO updateGarage(Long id, GarageDTO garageDTO);
+    void deleteGarage(Long id);
+    }

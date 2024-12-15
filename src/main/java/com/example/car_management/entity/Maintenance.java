@@ -1,20 +1,13 @@
 package com.example.car_management.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
 
 @Entity
-@Getter
-@Setter
-@NoArgsConstructor
-@AllArgsConstructor
 public class Maintenance {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -33,5 +26,69 @@ public class Maintenance {
     @Column(nullable = false)
     private String status;
 
+    public Maintenance(Long id, Car car, Garage garage, String serviceType, LocalDate scheduledDate, String status) {
+        this.id = id;
+        this.car = car;
+        this.garage = garage;
+        this.serviceType = serviceType;
+        this.scheduledDate = scheduledDate;
+        this.status = status;
+    }
 
+    public Maintenance() {
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public Maintenance setId(Long id) {
+        this.id = id;
+        return this;
+    }
+
+    public Car getCar() {
+        return car;
+    }
+
+    public Maintenance setCar(Car car) {
+        this.car = car;
+        return this;
+    }
+
+    public Garage getGarage() {
+        return garage;
+    }
+
+    public Maintenance setGarage(Garage garage) {
+        this.garage = garage;
+        return this;
+    }
+
+    public String getServiceType() {
+        return serviceType;
+    }
+
+    public Maintenance setServiceType(String serviceType) {
+        this.serviceType = serviceType;
+        return this;
+    }
+
+    public LocalDate getScheduledDate() {
+        return scheduledDate;
+    }
+
+    public Maintenance setScheduledDate(LocalDate scheduledDate) {
+        this.scheduledDate = scheduledDate;
+        return this;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public Maintenance setStatus(String status) {
+        this.status = status;
+        return this;
+    }
 }
