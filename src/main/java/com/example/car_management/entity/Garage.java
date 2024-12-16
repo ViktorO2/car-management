@@ -20,14 +20,22 @@ public class Garage {
     private String location;
     @Column(nullable = false)
     private int capacity;
+    @ManyToMany
+    @JoinTable(
+            name = "garage_cars",
+            joinColumns = @JoinColumn(name = "garage_id"),
+            inverseJoinColumns = @JoinColumn(name = "car_id")
+    )
+    private List<Car> cars = new ArrayList<>();
 
 
-    public Garage(Long id, String name, String city, String location, int capacity) {
+    public Garage(Long id, String name, String city, String location, int capacity, List<Car> cars) {
         this.id = id;
         this.name = name;
         this.city = city;
         this.location = location;
         this.capacity = capacity;
+        this.cars = cars;
     }
 
     public Garage() {
@@ -77,5 +85,22 @@ public class Garage {
     public Garage setCapacity(int capacity) {
         this.capacity = capacity;
         return this;
+    }
+
+    public List<Car> getCars() {
+        return cars;
+    }
+
+    public Garage setCars(List<Car> cars) {
+        this.cars = cars;
+        return this;
+    }
+
+    public void addCar(Car car) {
+        this.cars.add(car);
+    }
+
+    public void removeCar(Car car) {
+        this.cars.remove(car);
     }
 }

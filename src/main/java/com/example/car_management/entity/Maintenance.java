@@ -23,16 +23,13 @@ public class Maintenance {
     private String serviceType;
     @Column(nullable = false)
     private LocalDate scheduledDate;
-    @Column(nullable = false)
-    private String status;
 
-    public Maintenance(Long id, Car car, Garage garage, String serviceType, LocalDate scheduledDate, String status) {
+    public Maintenance(Long id, Car car, Garage garage, String serviceType, LocalDate scheduledDate) {
         this.id = id;
         this.car = car;
         this.garage = garage;
         this.serviceType = serviceType;
         this.scheduledDate = scheduledDate;
-        this.status = status;
     }
 
     public Maintenance() {
@@ -80,15 +77,6 @@ public class Maintenance {
 
     public Maintenance setScheduledDate(LocalDate scheduledDate) {
         this.scheduledDate = scheduledDate;
-        return this;
-    }
-
-    public String getStatus() {
-        return status;
-    }
-
-    public Maintenance setStatus(String status) {
-        this.status = status;
         return this;
     }
 }

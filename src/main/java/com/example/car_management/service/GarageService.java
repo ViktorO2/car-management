@@ -1,18 +1,16 @@
 package com.example.car_management.service;
 
-import com.example.car_management.dto.GarageDTO;
-import com.example.car_management.entity.Garage;
-import com.example.car_management.repository.GarageRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import com.example.car_management.dto.CreateGarageDTO;
+import com.example.car_management.dto.ResponseGarageDTO;
+import com.example.car_management.dto.UpdateGarageDTO;
 
 import java.util.List;
 
 public interface GarageService {
 
-    List<GarageDTO> getAllGarages(String city);
-    GarageDTO getGarageById(Long id);
-    GarageDTO createGarage(GarageDTO garageDTO);
-    GarageDTO updateGarage(Long id, GarageDTO garageDTO);
+    List<ResponseGarageDTO> getAllGarages(String city);
+    ResponseGarageDTO getGarageById(Long id);
+    ResponseGarageDTO createGarage(CreateGarageDTO createGarageDTO);
+    ResponseGarageDTO updateGarage(Long id, UpdateGarageDTO updateGarageDTO);
     void deleteGarage(Long id);
     }

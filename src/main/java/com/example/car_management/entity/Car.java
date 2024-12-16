@@ -18,15 +18,9 @@ public class Car {
     private String model;
     @Column(nullable = false)
     private int productionYear;
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String licensePlate;
-
-    @ManyToMany
-    @JoinTable(
-            name = "car_garage",
-            joinColumns = @JoinColumn(name = "car_id"),
-            inverseJoinColumns = @JoinColumn(name = "garage_id")
-    )
+    @ManyToMany(mappedBy = "cars",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
     private List<Garage> garages = new ArrayList<>();
 
     public Car(Long id, String make, String model, int productionYear, String licensePlate, List<Garage> garages) {
@@ -95,6 +89,20 @@ public class Car {
     public Car setGarages(List<Garage> garages) {
         this.garages = garages;
         return this;
+    }
+
+    // Метод за добавяне на гараж към кола
+    public void addGarage(Garage garage) {
+        this.garages.add(garage);
+        if (!garage.getCars().contains(this)) {
+            garage.addCar(this); // Обновяване на асоциацията в гаража
+        }
+    }
+
+    // Метод за премахване на гараж от кола
+    public void removeGarage(Garage garage) {
+        this.garages.remove(garage);
+        garage.removeCar(this); // Обновяване на асоциацията в гаража
     }
 }
 

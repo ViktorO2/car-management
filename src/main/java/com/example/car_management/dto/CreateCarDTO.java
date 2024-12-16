@@ -1,34 +1,32 @@
 package com.example.car_management.dto;
 
-import com.example.car_management.entity.Garage;
+import java.util.ArrayList;
 import java.util.List;
 
 
-public class CarDTO {
-    private Long id;
+public class CreateCarDTO {
     private String make;
     private String model;
     private int productionYear;
     private String licensePlate;
-    private List<Garage> garages;
+    private List<Long> garageIds;
 
-    public CarDTO() {
+    public CreateCarDTO() {
     }
 
-    public CarDTO(Long id,String make, String model, int productionYear, String licensePlate, List<Garage> garages) {
-        this.id=id;
+    public CreateCarDTO(Long id, String make, String model, int productionYear, String licensePlate, List<Long> garageIds) {
         this.make = make;
         this.model = model;
         this.productionYear = productionYear;
         this.licensePlate = licensePlate;
-        this.garages = garages;
+        this.garageIds =garageIds;
     }
 
     public String getMake() {
         return make;
     }
 
-    public CarDTO setMake(String make) {
+    public CreateCarDTO setMake(String make) {
         this.make = make;
         return this;
     }
@@ -37,7 +35,7 @@ public class CarDTO {
         return model;
     }
 
-    public CarDTO setModel(String model) {
+    public CreateCarDTO setModel(String model) {
         this.model = model;
         return this;
     }
@@ -46,7 +44,7 @@ public class CarDTO {
         return productionYear;
     }
 
-    public CarDTO setProductionYear(int productionYear) {
+    public CreateCarDTO setProductionYear(int productionYear) {
         this.productionYear = productionYear;
         return this;
     }
@@ -55,26 +53,17 @@ public class CarDTO {
         return licensePlate;
     }
 
-    public CarDTO setLicensePlate(String licensePlate) {
+    public CreateCarDTO setLicensePlate(String licensePlate) {
         this.licensePlate = licensePlate;
         return this;
     }
 
-    public List<Garage> getGarages() {
-        return garages;
+    public List<Long> getGarageIds() {
+        return garageIds;
     }
 
-    public CarDTO setGarages(List<Garage> garages) {
-        this.garages = garages;
-        return this;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public CarDTO setId(Long id) {
-        this.id = id;
+    public CreateCarDTO setGarageIds(List<Long> garageIds) {
+        this.garageIds = garageIds;
         return this;
     }
 }

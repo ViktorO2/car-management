@@ -1,11 +1,14 @@
 package com.example.car_management.service.impl;
 
-import com.example.car_management.dto.GarageDTO;
+import com.example.car_management.dto.CreateGarageDTO;
+import com.example.car_management.dto.ResponseGarageDTO;
+import com.example.car_management.dto.UpdateGarageDTO;
 import com.example.car_management.entity.Garage;
 import com.example.car_management.repository.GarageRepository;
 import com.example.car_management.service.GarageService;
 import org.modelmapper.ModelMapper;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -18,8 +21,9 @@ import java.util.stream.Collectors;
 
 @Service
 public class GarageServiceImpl implements GarageService {
-
+    @Autowired
     private final GarageRepository garageRepository;
+    @Autowired
     private final ModelMapper modelMapper;
 
     public GarageServiceImpl(GarageRepository garageRepository, ModelMapper modelMapper) {
@@ -29,52 +33,42 @@ public class GarageServiceImpl implements GarageService {
 
 
     @Override
-    public List<GarageDTO> getAllGarages(String city) {
+    public ResponseGarageDTO createGarage(CreateGarageDTO createGarageDTO) {
+        Garage garage = modelMapper.map(createGarageDTO, Garage.class);
+        garage = garageRepository.save(garage);
+        return modelMapper.map(garage, ResponseGarageDTO.class);
+    }
+
+    @Override
+    public List<ResponseGarageDTO> getAllGarages(String city) {
         List<Garage> garages = (city == null) ?
                 garageRepository.findAll() : garageRepository.findByCity(city);
 
         return garages.stream()
-                .map(garage -> modelMapper.map(garage, GarageDTO.class))
+                .map(garage -> modelMapper.map(garage, ResponseGarageDTO.class))
                 .collect(Collectors.toList());
     }
-
     @Override
-    public GarageDTO getGarageById(Long id) {
-        Optional<Garage> garage=garageRepository.findById(id);
-        if (garage.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Garage not found");
-        }else{
-        return modelMapper.map(garage,GarageDTO.class);
+    public ResponseGarageDTO getGarageById(Long id) {
+        Garage garage = garageRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Garage not found"));
+
+        return modelMapper.map(garage, ResponseGarageDTO.class);
+    }
+    @Override
+    public ResponseGarageDTO updateGarage(Long id, UpdateGarageDTO updateGarageDTO) {
+        Garage garage = garageRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Garage not found"));
+            garage.setName(updateGarageDTO.getName());
+            garage.setLocation(updateGarageDTO.getLocation());
+            garage.setCity(updateGarageDTO.getCity());
+            garage.setCapacity(updateGarageDTO.getCapacity());
+            garage = garageRepository.save(garage);
+            return modelMapper.map(garage, ResponseGarageDTO.class);
         }
-    }
-
-    @Override
-    public GarageDTO createGarage(GarageDTO garageDTO) {
-        Garage garage = modelMapper.map(garageDTO, Garage.class);
-        garage = garageRepository.save(garage);
-        return modelMapper.map(garage, GarageDTO.class);
-    }
-
-    @Override
-    public GarageDTO updateGarage(Long id, GarageDTO garageDTO) {
-        Optional<Garage> existedGarage=garageRepository.findById(id);
-        if (existedGarage.isEmpty()) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Garage not found");
-        }else {
-            Garage garage=existedGarage.get();
-            garage.setName(garageDTO.getName());
-            garage.setLocation(garageDTO.getLocation());
-            garage.setCity(garageDTO.getCity());
-            garage.setCapacity(garageDTO.getCapacity());
-            garage=this.garageRepository.save(garage);
-            return this.modelMapper.map(garage, GarageDTO.class);
-        }
-
-    }
-
     public void deleteGarage(Long id) {
         if (!garageRepository.existsById(id)) {
-            throw new RuntimeException("Garage not found");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND,"Garage not found");
         }
         garageRepository.deleteById(id);
     }

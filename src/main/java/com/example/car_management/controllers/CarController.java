@@ -1,8 +1,11 @@
 package com.example.car_management.controllers;
 
-import com.example.car_management.dto.CarDTO;
-import com.example.car_management.entity.Car;
+import com.example.car_management.dto.CreateCarDTO;;
+import com.example.car_management.dto.ResponseCarDTO;
+import com.example.car_management.dto.UpdateCarDTO;
+import com.example.car_management.dto.UpdateGarageDTO;
 import com.example.car_management.service.CarService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -18,19 +21,34 @@ public class CarController {
         this.carService = carService;
     }
 
+    @PostMapping
+    public ResponseEntity<ResponseCarDTO> createCar(@RequestBody CreateCarDTO createCarDTO){
+        return ResponseEntity.status(201).body(carService.createCar(createCarDTO));
+    }
 
     @GetMapping
-    public ResponseEntity<List<CarDTO>> getAllCars(
-            @RequestParam(value = "make", required = false) String make,
-            @RequestParam(value = "model", required = false) String model,
-            @RequestParam(value = "startYear", required = false) Integer startYear,
-            @RequestParam(value = "endYear", required = false) Integer endYear) {
-
-        List<CarDTO> cars = carService.getAllCars(make, model, startYear, endYear);
-        return ResponseEntity.ok(cars);  // Return the list of cars with HTTP 200 OK
+    public ResponseEntity<List<ResponseCarDTO>> getAllCars(
+            @RequestParam(required = false) String carMake,
+            @RequestParam(required = false) Long garageIds,
+            @RequestParam(required = false) Integer fromYear,
+            @RequestParam(required = false) Integer toYear){
+        return ResponseEntity.ok(carService.getAllCars(carMake,garageIds,fromYear,toYear));
     }
-    @PostMapping
-    public ResponseEntity<CarDTO> createCar(@RequestBody CarDTO carDTO){
-        return ResponseEntity.ok(carService.createCar(carDTO));
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ResponseCarDTO> getCarById(@PathVariable Long id){
+        return ResponseEntity.ok(carService.getCarById(id));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<ResponseCarDTO> updateCar(@PathVariable Long id, @RequestBody UpdateCarDTO updateCarDTO){
+        return ResponseEntity.ok(carService.updateCar(id,updateCarDTO));
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteCar(@PathVariable Long id){
+        carService.deleteCar(id);
+        return ResponseEntity.noContent().build();
     }
 }
+
