@@ -1,13 +1,16 @@
 package com.example.car_management.controllers;
 
-import com.example.car_management.dto.CreateGarageDTO;
-import com.example.car_management.dto.ResponseGarageDTO;
-import com.example.car_management.dto.UpdateGarageDTO;
+import com.example.car_management.dto.Create.CreateGarageDTO;
+import com.example.car_management.dto.GarageDailyAvailabilityReportDTO;
+import com.example.car_management.dto.Response.ResponseGarageDTO;
+import com.example.car_management.dto.Update.UpdateGarageDTO;
 import com.example.car_management.service.GarageService;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 
+import java.time.LocalDate;
 import java.util.List;
 @RestController
 @RequestMapping("garages")
@@ -38,6 +41,18 @@ public class GarageController {
     public ResponseEntity<ResponseGarageDTO> getGarageById(@PathVariable Long id){
         return ResponseEntity.ok(garageService.getGarageById(id));
     }
-
+    @GetMapping("/dailyAvailabilityReport")
+    public ResponseEntity<List<GarageDailyAvailabilityReportDTO>> getDailyAvailabilityReport(
+            @RequestParam Long garageId,
+            @RequestParam LocalDate startDate,
+            @RequestParam LocalDate endDate) {
+        try {
+            List<GarageDailyAvailabilityReportDTO> report = garageService.getAvailabilityReport(garageId, startDate, endDate);
+            return ResponseEntity.ok(report);
+        } catch (Exception e) {
+            // Логирайте грешката за по-лесно диагностициране
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
+        }
+    }
 }
 

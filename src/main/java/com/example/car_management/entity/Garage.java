@@ -20,7 +20,8 @@ public class Garage {
     private String location;
     @Column(nullable = false)
     private int capacity;
-    @ManyToMany
+
+    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
     @JoinTable(
             name = "garage_cars",
             joinColumns = @JoinColumn(name = "garage_id"),
@@ -97,10 +98,14 @@ public class Garage {
     }
 
     public void addCar(Car car) {
-        this.cars.add(car);
+        if (!cars.contains(car)) {
+            cars.add(car);
+            car.getGarages().add(this); // Взаимно обновяване
+        }
     }
 
     public void removeCar(Car car) {
-        this.cars.remove(car);
+        cars.remove(car);
+        car.getGarages().remove(this); // Взаимно премахване
     }
 }

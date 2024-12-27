@@ -20,7 +20,7 @@ public class Car {
     private int productionYear;
     @Column(nullable = false, unique = true)
     private String licensePlate;
-    @ManyToMany(mappedBy = "cars",cascade = CascadeType.ALL,fetch = FetchType.LAZY)
+    @ManyToMany(mappedBy = "cars", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.LAZY)
     private List<Garage> garages = new ArrayList<>();
 
     public Car(Long id, String make, String model, int productionYear, String licensePlate, List<Garage> garages) {
@@ -91,18 +91,17 @@ public class Car {
         return this;
     }
 
-    // Метод за добавяне на гараж към кола
     public void addGarage(Garage garage) {
-        this.garages.add(garage);
-        if (!garage.getCars().contains(this)) {
-            garage.addCar(this); // Обновяване на асоциацията в гаража
+        if (!garages.contains(garage)) {
+            garages.add(garage);
+            garage.getCars().add(this); // Взаимно обновяване
         }
     }
 
-    // Метод за премахване на гараж от кола
     public void removeGarage(Garage garage) {
-        this.garages.remove(garage);
-        garage.removeCar(this); // Обновяване на асоциацията в гаража
+        garages.remove(garage);
+        garage.getCars().remove(this); // Взаимно премахване
     }
 }
+
 

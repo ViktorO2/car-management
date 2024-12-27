@@ -1,9 +1,11 @@
 package com.example.car_management.service;
 
-import com.example.car_management.dto.CreateGarageDTO;
-import com.example.car_management.dto.ResponseGarageDTO;
-import com.example.car_management.dto.UpdateGarageDTO;
+import com.example.car_management.dto.Create.CreateGarageDTO;
+import com.example.car_management.dto.GarageDailyAvailabilityReportDTO;
+import com.example.car_management.dto.Response.ResponseGarageDTO;
+import com.example.car_management.dto.Update.UpdateGarageDTO;
 
+import java.time.LocalDate;
 import java.util.List;
 
 public interface GarageService {
@@ -13,4 +15,6 @@ public interface GarageService {
     ResponseGarageDTO createGarage(CreateGarageDTO createGarageDTO);
     ResponseGarageDTO updateGarage(Long id, UpdateGarageDTO updateGarageDTO);
     void deleteGarage(Long id);
-    }
+
+    List<GarageDailyAvailabilityReportDTO> getAvailabilityReport(Long garageId, LocalDate startDate, LocalDate endDate);
+}

@@ -1,9 +1,8 @@
 package com.example.car_management.service;
 
-import com.example.car_management.dto.CreateCarDTO;
-import com.example.car_management.dto.ResponseCarDTO;
-import com.example.car_management.dto.UpdateCarDTO;
-import com.example.car_management.dto.UpdateGarageDTO;
+import com.example.car_management.dto.Create.CreateCarDTO;
+import com.example.car_management.dto.Response.ResponseCarDTO;
+import com.example.car_management.dto.Update.UpdateCarDTO;
 
 import java.util.List;
 

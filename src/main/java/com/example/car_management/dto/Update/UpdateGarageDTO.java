@@ -1,4 +1,4 @@
-package com.example.car_management.dto;
+package com.example.car_management.dto.Update;
 
 public class UpdateGarageDTO {
     private String name;

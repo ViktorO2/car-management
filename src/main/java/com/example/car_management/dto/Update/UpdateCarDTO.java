@@ -1,32 +1,30 @@
-package com.example.car_management.dto;
+package com.example.car_management.dto.Update;
 
-import java.util.ArrayList;
 import java.util.List;
 
+public class UpdateCarDTO {
+        private String make;
+        private String model;
+        private int productionYear;
+        private String licensePlate;
+        private List<Long> garageIds;
 
-public class CreateCarDTO {
-    private String make;
-    private String model;
-    private int productionYear;
-    private String licensePlate;
-    private List<Long> garageIds;
-
-    public CreateCarDTO() {
-    }
-
-    public CreateCarDTO(Long id, String make, String model, int productionYear, String licensePlate, List<Long> garageIds) {
+    public UpdateCarDTO(String make, String model, int productionYear, String licensePlate, List<Long> garageIds) {
         this.make = make;
         this.model = model;
         this.productionYear = productionYear;
         this.licensePlate = licensePlate;
-        this.garageIds =garageIds;
+        this.garageIds = garageIds;
+    }
+
+    public UpdateCarDTO() {
     }
 
     public String getMake() {
         return make;
     }
 
-    public CreateCarDTO setMake(String make) {
+    public UpdateCarDTO setMake(String make) {
         this.make = make;
         return this;
     }
@@ -35,7 +33,7 @@ public class CreateCarDTO {
         return model;
     }
 
-    public CreateCarDTO setModel(String model) {
+    public UpdateCarDTO setModel(String model) {
         this.model = model;
         return this;
     }
@@ -44,7 +42,7 @@ public class CreateCarDTO {
         return productionYear;
     }
 
-    public CreateCarDTO setProductionYear(int productionYear) {
+    public UpdateCarDTO setProductionYear(int productionYear) {
         this.productionYear = productionYear;
         return this;
     }
@@ -53,7 +51,7 @@ public class CreateCarDTO {
         return licensePlate;
     }
 
-    public CreateCarDTO setLicensePlate(String licensePlate) {
+    public UpdateCarDTO setLicensePlate(String licensePlate) {
         this.licensePlate = licensePlate;
         return this;
     }
@@ -62,7 +60,7 @@ public class CreateCarDTO {
         return garageIds;
     }
 
-    public CreateCarDTO setGarageIds(List<Long> garageIds) {
+    public UpdateCarDTO setGarageIds(List<Long> garageIds) {
         this.garageIds = garageIds;
         return this;
     }

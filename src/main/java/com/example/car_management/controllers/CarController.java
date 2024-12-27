@@ -1,11 +1,9 @@
 package com.example.car_management.controllers;
 
-import com.example.car_management.dto.CreateCarDTO;;
-import com.example.car_management.dto.ResponseCarDTO;
-import com.example.car_management.dto.UpdateCarDTO;
-import com.example.car_management.dto.UpdateGarageDTO;
+import com.example.car_management.dto.Create.CreateCarDTO;
+import com.example.car_management.dto.Response.ResponseCarDTO;
+import com.example.car_management.dto.Update.UpdateCarDTO;
 import com.example.car_management.service.CarService;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

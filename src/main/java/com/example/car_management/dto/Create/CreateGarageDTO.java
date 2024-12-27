@@ -1,8 +1,4 @@
-package com.example.car_management.dto;
-
-
-import java.util.ArrayList;
-import java.util.List;
+package com.example.car_management.dto.Create;
 
 
 public class CreateGarageDTO {
