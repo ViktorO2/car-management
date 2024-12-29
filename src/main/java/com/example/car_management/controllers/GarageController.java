@@ -43,16 +43,12 @@ public class GarageController {
     }
     @GetMapping("/dailyAvailabilityReport")
     public ResponseEntity<List<GarageDailyAvailabilityReportDTO>> getDailyAvailabilityReport(
-            @RequestParam Long garageId,
-            @RequestParam LocalDate startDate,
-            @RequestParam LocalDate endDate) {
-        try {
-            List<GarageDailyAvailabilityReportDTO> report = garageService.getAvailabilityReport(garageId, startDate, endDate);
-            return ResponseEntity.ok(report);
-        } catch (Exception e) {
-            // Логирайте грешката за по-лесно диагностициране
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(null);
-        }
+            @RequestParam(value = "garageId") Long garageId,
+            @RequestParam(value = "startDate") LocalDate startDate,
+            @RequestParam(value = "endDate") LocalDate endDate) {
+
+        List<GarageDailyAvailabilityReportDTO> report=garageService.getGarageDailyReport(garageId,startDate,endDate);
+        return ResponseEntity.ok(report);
     }
 }
 

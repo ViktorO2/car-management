@@ -104,8 +104,4 @@ public class Garage {
         }
     }
 
-    public void removeCar(Car car) {
-        cars.remove(car);
-        car.getGarages().remove(this); // Взаимно премахване
-    }
 }

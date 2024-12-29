@@ -26,11 +26,11 @@ public class CarController {
 
     @GetMapping
     public ResponseEntity<List<ResponseCarDTO>> getAllCars(
-            @RequestParam(required = false) String carMake,
-            @RequestParam(required = false) Long garageIds,
-            @RequestParam(required = false) Integer fromYear,
-            @RequestParam(required = false) Integer toYear){
-        return ResponseEntity.ok(carService.getAllCars(carMake,garageIds,fromYear,toYear));
+            @RequestParam(value = "carMake",required = false) String carMake,
+            @RequestParam(value = "garageId",required = false) Long garageId,
+            @RequestParam(value = "fromYear",required = false) Integer fromYear,
+            @RequestParam(value = "toYear",required = false) Integer toYear){
+        return ResponseEntity.ok(carService.getAllCars(carMake,garageId,fromYear,toYear));
     }
 
     @GetMapping("/{id}")

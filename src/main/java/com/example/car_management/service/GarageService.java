@@ -16,5 +16,5 @@ public interface GarageService {
     ResponseGarageDTO updateGarage(Long id, UpdateGarageDTO updateGarageDTO);
     void deleteGarage(Long id);
 
-    List<GarageDailyAvailabilityReportDTO> getAvailabilityReport(Long garageId, LocalDate startDate, LocalDate endDate);
+    List<GarageDailyAvailabilityReportDTO> getGarageDailyReport(Long garageId, LocalDate startDate, LocalDate endDate);
 }

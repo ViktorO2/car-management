@@ -15,5 +15,5 @@ public interface MaintenanceService {
     void deleteMaintenance(Long id);
     ResponseMaintenanceDTO getMaintenanceById(Long id);
     List<ResponseMaintenanceDTO> getAllMaintenances(Long carId, Long garageId, LocalDate startDate, LocalDate endDate);
-    List<MonthlyRequestsReportDTO> getMonthlyRequestsReport(Long garageId, YearMonth startMonth, YearMonth endMonth);
+    List<MonthlyRequestsReportDTO> getMonthlyRequestsReport(Long garageId, String startDate, String  endDate);
 }

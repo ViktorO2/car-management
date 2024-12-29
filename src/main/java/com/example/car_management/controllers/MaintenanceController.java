@@ -29,7 +29,6 @@ public class MaintenanceController {
         this.maintenanceService = maintenanceService;
     }
 
-
     @PostMapping
     public ResponseEntity<ResponseMaintenanceDTO> createMaintenance(@Valid @RequestBody CreateMaintenanceDTO createMaintenanceDTO) {
         return ResponseEntity.ok(maintenanceService.createMaintenance(createMaintenanceDTO));
@@ -48,11 +47,12 @@ public class MaintenanceController {
     }
     @GetMapping
     public ResponseEntity<List<ResponseMaintenanceDTO>> getAllMaintenances(
-            @RequestParam(required = false) Long carId,
-            @RequestParam(required = false) Long garageId,
-            @RequestParam(required = false)@DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-            @RequestParam(required = false)@DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate) {
-        return ResponseEntity.ok(maintenanceService.getAllMaintenances(carId, garageId, startDate, endDate));
+            @RequestParam(value = "carId",required = false) Long carId,
+            @RequestParam(value = "garageId",required = false) Long garageId,
+            @RequestParam(value = "startDate",required = false) LocalDate startDate,
+            @RequestParam(value = "endDate",required = false) LocalDate endDate) {
+        List<ResponseMaintenanceDTO> responseMaintenanceDTOS = maintenanceService.getAllMaintenances(carId, garageId, startDate, endDate);
+        return ResponseEntity.ok(responseMaintenanceDTOS);
     }
 
     @GetMapping("/{id}")
@@ -60,15 +60,12 @@ public class MaintenanceController {
         return ResponseEntity.ok(maintenanceService.getMaintenanceById(id));
     }
     @GetMapping("/monthlyRequestsReport")
-    public ResponseEntity<List<MonthlyRequestsReportDTO>> getMonthlyReport(
-            @RequestParam(required = false) Long garageId,
-            @RequestParam @DateTimeFormat(pattern = "yyyy-MM") YearMonth startMonth,
-            @RequestParam @DateTimeFormat(pattern = "yyyy-MM") YearMonth endMonth) {
-        if (startMonth.isAfter(endMonth)) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Start month cannot be after end month");
-        }
-        List<MonthlyRequestsReportDTO> report = maintenanceService.getMonthlyRequestsReport(garageId, startMonth, endMonth);
-        return ResponseEntity.ok(report);
+    public ResponseEntity<List<MonthlyRequestsReportDTO>> getMonthlyReport(@RequestParam(value = "garageId") Long garageId,
+                                                                           @RequestParam(value = "startMonth", required = false) String startDate,
+                                                                           @RequestParam(value = "endMonth", required = false) String endDate) {
+       List<MonthlyRequestsReportDTO> term=maintenanceService.getMonthlyRequestsReport(garageId,startDate,endDate);
+       return ResponseEntity.ok(term);
     }
+
 
 }

@@ -12,21 +12,29 @@ import java.util.List;
 
 @Repository
 public interface MaintenanceRepository extends JpaRepository<Maintenance, Long> {
-    List<Maintenance> findByCarId(Long carId);
+    @Query("SELECT MIN(m.scheduledDate) FROM Maintenance m")
+    LocalDate findStartDate();
+    @Query("SELECT MAX(m.scheduledDate) FROM Maintenance m")
+    LocalDate findLastDate();
+    @Query(value = "SELECT * FROM maintenance m " +
+            "WHERE (:carId IS NULL OR m.car_id = :carId) " +
+            "AND (:garageId IS NULL OR m.garage_id = :garageId) " +
+            "AND m.scheduled_date BETWEEN :startDate AND :endDate", nativeQuery = true)
+    List<Maintenance> findMaintenanceByFilters(
+            @Param("carId") Long carId,
+            @Param("garageId") Long garageId,
+            @Param("startDate") LocalDate startDate,
+            @Param("endDate") LocalDate endDate);
 
-    List<Maintenance> findByGarageId(Long garageId);
-
-    List<Maintenance> findByScheduledDateBetween(LocalDate startDate, LocalDate endDate);
-
-    @Query("SELECT COUNT(m) FROM Maintenance m WHERE m.garage.id = :garageId AND m.scheduledDate = :date")
-    int countByGarageAndDate(@Param("garageId") Long garageId, @Param("date") LocalDate date);
-
-    @Query(value = "SELECT DATE_FORMAT(m.scheduled_date, '%Y-%m') AS yearMonth, COUNT(m.id) " +
+    @Query(value = "SELECT DATE(m.scheduled_date) AS date, COUNT(m.id) AS requests " +
             "FROM maintenance m " +
-            "WHERE m.scheduled_date BETWEEN :startDate AND :endDate " +
-            "GROUP BY yearMonth " +
-            "ORDER BY yearMonth", nativeQuery = true)
-    List<Object[]> countRequestsByMonth(@Param("garageId") Long garageId,
-                                        @Param("startDate") LocalDate startDate,
-                                        @Param("endDate") LocalDate endDate);
+            "WHERE m.garage_id = :garageId " +
+            "AND m.scheduled_date >= :startMonth " +
+            "AND m.scheduled_date <= :endMonth " +
+            "GROUP BY DATE(m.scheduled_date) " +
+            "ORDER BY DATE(m.scheduled_date) ASC", nativeQuery = true)
+    List<Object[]> getMonthlyReport(
+            @Param("garageId") Long garageId,
+            @Param("startMonth") LocalDate startDate,
+            @Param("endMonth") LocalDate endDate);
 }

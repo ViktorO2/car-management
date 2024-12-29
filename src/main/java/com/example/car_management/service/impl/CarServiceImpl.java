@@ -90,12 +90,11 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public List<ResponseCarDTO> getAllCars(String carMake, Long garageId, Integer fromYear, Integer toYear) {
-        List<Car> cars = carRepository.findAll();
+        List<Car> cars = carRepository.findCarsByFilters(carMake,garageId,fromYear,toYear);
+        if(cars.isEmpty()){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Car not found");
+        }
         return cars.stream()
-                .filter(car -> (carMake == null || car.getMake().equalsIgnoreCase(carMake)))
-                .filter(car -> (garageId == null || car.getGarages().stream().anyMatch(g -> g.getId().equals(garageId))))
-                .filter(car -> (fromYear == null || car.getProductionYear() >= fromYear))
-                .filter(car -> (toYear == null || car.getProductionYear() <= toYear))
                 .map(this::mapCarToResponseCarDTO)
                 .collect(Collectors.toList());
     }

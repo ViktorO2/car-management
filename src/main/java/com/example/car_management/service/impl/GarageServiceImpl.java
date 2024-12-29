@@ -6,6 +6,7 @@ import com.example.car_management.dto.Response.ResponseGarageDTO;
 import com.example.car_management.dto.Update.UpdateGarageDTO;
 import com.example.car_management.entity.Garage;
 import com.example.car_management.repository.GarageRepository;
+import com.example.car_management.repository.MaintenanceRepository;
 import com.example.car_management.service.GarageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -13,6 +14,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
+import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,12 +23,16 @@ import java.util.stream.Collectors;
 public class GarageServiceImpl implements GarageService {
     @Autowired
     private final GarageRepository garageRepository;
-
-    public GarageServiceImpl(GarageRepository garageRepository) {
+    private final MaintenanceRepository maintenanceRepository;
+    public GarageServiceImpl(GarageRepository garageRepository, MaintenanceRepository maintenanceRepository) {
         this.garageRepository = garageRepository;
+        this.maintenanceRepository = maintenanceRepository;
     }
 
     private Garage mapCreateGarageDTOToGarage(CreateGarageDTO createGarageDTO) {
+      if(createGarageDTO==null){
+          return null;
+      }
         Garage garage = new Garage();
         garage.setName(createGarageDTO.getName());
         garage.setLocation(createGarageDTO.getLocation());
@@ -35,6 +42,9 @@ public class GarageServiceImpl implements GarageService {
     }
 
     private ResponseGarageDTO mapGarageToResponseGarageDTO(Garage garage) {
+        if(garage==null){
+            return null;
+        }
         ResponseGarageDTO responseGarageDTO = new ResponseGarageDTO();
         responseGarageDTO.setId(garage.getId());
         responseGarageDTO.setName(garage.getName());
@@ -90,37 +100,26 @@ public class GarageServiceImpl implements GarageService {
     }
 
     @Override
-    public List<GarageDailyAvailabilityReportDTO> getAvailabilityReport(Long garageId, LocalDate startDate, LocalDate endDate) {
-        // Извличане на всички заявки за даден сервиз в зададения диапазон от дати
-        List<Garage> garages = garageRepository.findAll(); // Може да добавите филтър за конкретния сервиз, ако е необходимо
+    public List<GarageDailyAvailabilityReportDTO> getGarageDailyReport(Long garageId, LocalDate startDate, LocalDate endDate) {
+        List<Object[]> rawResults = garageRepository.getGarageDailyAvailability(garageId, startDate, endDate);
+        return rawResults.stream()
+                .map(row -> {
+                    try {
+                        Date sqlDate = (Date) row[0];
+                        LocalDate date = LocalDate.parse(sqlDate.toString());
 
-        // Създаваме примерна статистика за заявките на сервиза
-        return garages.stream()
-                .filter(garage -> garage.getId().equals(garageId)) // Филтрираме по сервиз
-                .map(garage -> {
-                    int totalCapacity = garage.getCapacity();
-                    List<LocalDate> datesInRange = getDatesBetween(startDate, endDate); // Получаваме всички дати в диапазона
-                    return datesInRange.stream()
-                            .map(date -> {
-                                int requests = getRequestsForDate(garageId, date); // Тук ще броим заявките за конкретната дата
-                                int availableCapacity = totalCapacity - requests; // Изчисляваме свободния капацитет
-                                return new GarageDailyAvailabilityReportDTO(date, requests, availableCapacity);
-                            })
-                            .collect(Collectors.toList());
+                        Integer requests = ((Number) row[1]).intValue();
+                        Integer availableCapacity = ((Number) row[2]).intValue();
+
+                        return new GarageDailyAvailabilityReportDTO(date, requests, availableCapacity);
+                    } catch (Exception e) {
+                        System.err.println("Error mapping row: " + Arrays.toString(row));
+                        e.printStackTrace();
+                        return null;
+                    }
+
                 })
-                .flatMap(List::stream) // Разгъваме списъците в един
                 .collect(Collectors.toList());
     }
 
-    // Метод за извличане на заявките за даден сервиз за конкретна дата
-    private int getRequestsForDate(Long garageId, LocalDate date) {
-        // Тук ще добавите логиката за броене на заявките за даден сервиз и дата
-        // Примерно броене на заявки за съответната дата
-        return 0; // Поставете правилния код тук
-    }
-
-    // Метод за извличане на всички дати между две дати
-    private List<LocalDate> getDatesBetween(LocalDate startDate, LocalDate endDate) {
-        return startDate.datesUntil(endDate.plusDays(1)).collect(Collectors.toList());
-    }
 }

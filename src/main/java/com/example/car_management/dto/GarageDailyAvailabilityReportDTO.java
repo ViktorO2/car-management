@@ -14,10 +14,6 @@ public class GarageDailyAvailabilityReportDTO {
         this.availableCapacity = availableCapacity;
     }
 
-    public GarageDailyAvailabilityReportDTO() {
-
-    }
-
     public LocalDate getDate() {
         return date;
     }
